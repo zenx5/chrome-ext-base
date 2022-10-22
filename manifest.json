@@ -10,9 +10,8 @@
     "options_page":"app/index.html?path=configuration",
     "content_scripts": [
         {
-            "matches": ["https://*.com"],
-            "css": [""],
-            "js": [""]
+            "matches": ["https://www.biblegateway.com/passage/*"],
+            "js": ["app/app.js"]
         }
     ]
 }

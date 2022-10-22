@@ -1,11 +1,10 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import App from './App'
-import { HashRouter } from 'react-router-dom'
- 
-ReactDOM.render(
-    <HashRouter>
-        <App />
-    </HashRouter>,
-    document.getElementById('root')
-)
+import { renderViews, contentScript } from "./matchs" 
+
+
+if( /https:\/\/www\.biblegateway\.com\/passage\/./.exec( document.location.href ) !== null ){
+    console.log('contentScript')
+    contentScript()
+}else{
+    renderViews()
+}
+
