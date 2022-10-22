@@ -8,6 +8,7 @@ export default function contentScript(){
                 <Vers content={element.innerText} />,
                 element
             )
+            console.log('done')
         }catch(error){
             console.log(error)
         }       
