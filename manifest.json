@@ -7,5 +7,12 @@
     "action": {
         "default_popup": "app/index.html?path=popup"
     },
-    "options_page":"app/index.html?path=configuration"
+    "options_page":"app/index.html?path=configuration",
+    "content_scripts": [
+        {
+            "matches": ["https://*.com"],
+            "css": [""],
+            "js": [""]
+        }
+    ]
 }
