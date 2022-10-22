@@ -28,7 +28,7 @@ module.exports = (env, argv) => {
 
     return {
         output: {
-            filename: 'index.js',
+            filename: 'app.js',
             path: path.resolve(__dirname, 'app')
         },
         plugins:[
