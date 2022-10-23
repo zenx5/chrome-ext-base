@@ -4,6 +4,9 @@
     "description": "Description",
     "version": "1.0.0",
     "permissions": ["storage"],
+    "background": {
+        "service_worker": "Background.js"
+    },
     "action": {
         "default_popup": "index.html?path=popup"
     },

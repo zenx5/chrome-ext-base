@@ -1,16 +1,38 @@
-import { Box, Card, CardContent, CardActions, TableContainer, Table, TableHead, TableBody, TableRow, TableCell, Typography } from "@mui/material";
+import { useEffect, useState } from 'react'
+import { 
+    Box, 
+    Button, 
+    Card, 
+    CardContent, 
+    CardActions, 
+    TableContainer, 
+    Table, 
+    TableHead, 
+    TableBody, 
+    TableRow, 
+    TableCell, 
+    Typography } from "@mui/material";
+import { createPort, send } from "../utils/Message";
+import { get } from "../utils/Storage";
 
 export default function Popup(){
+    const [words, setWords] = useState({});
+    const [total, setTotal] = useState(0);
 
-    const itemClick = () => {
+    const port = createPort('Popup', (a,b,c) => {
+        console.log(a, b, c)
+    })
 
+
+    useEffect(() => {
+        (total===0 && getData())
+    }, []);
+
+    const getData = async () => {
+        const library = await get('library')
+        console.log(library)
     }
 
-    let words = [
-        { word:'casa', quantity: 2, },
-        { word:'hola', quantity: 2, },
-        { word:'vida', quantity: 1, },
-    ]
     
     const totalWords = ()=>{
         let total = 0
@@ -19,7 +41,7 @@ export default function Popup(){
         return total
     }
 
-    const total = totalWords()
+    
 
 
 
@@ -47,7 +69,7 @@ export default function Popup(){
                                     <TableRow>
                                         <TableCell align="left">{item.word}</TableCell>
                                         <TableCell align="center">{ item.word===''? '-' : percent(item.quantity)}%</TableCell>
-                                        <TableCell align="right">{item.quantity}</TableCell>
+                                        <TableCell align="right"><Button onClick={()=>send(port, {quantity:item.quantity})}>{item.quantity}</Button></TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>

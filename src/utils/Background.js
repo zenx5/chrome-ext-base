@@ -1,31 +1,43 @@
+const get = async (key) => {
+    await chrome.storage.local.get(key)
+}
 
-chrome.runtime.onInstalled.addListener( function(){
-    chrome.storage.local.set({products: []});
+const set = async (key, value) => {
+    await chrome.storage.local.set(key, value)
+}
+
+chrome.runtime.onInstalled.addListener( async function(){
+    console.log('Installed!!')
+    await set( 'library', {} )
 });
 
-chrome.runtime.onConnect.addListener( function(port) {
-    port.onMessage.addListener( function(msg,port){
-        
-        if( msg.action == 'check' ){
-            chrome.storage.local.get("products", function(data){
-                if( data.products.length == 0 ){
-                    port.postMessage({result:'clear'});
-                }                
-            });
-            
-        }else if( msg.action == 'add' ){
-            chrome.storage.local.get("products", function(data){
-                let products = [];
-                if( Object.keys(data).length !== 0 ) {
-                    products = data.products;
+chrome.runtime.onConnect.addListener( async function(port) {
+    port.onMessage.addListener( async (msg, port) => {
+        library = await get('library')
+        switch(msg.typeEvent) { 
+            case 'add':
+                const { version, search, word } = msg
+                if( library[`${version}`] ){
+                    if( library[`${version}`][`${search}`] ) {
+                        if( library[`${version}`][`${search}`][`${word}`] ) {
+                            library[`${version}`][`${search}`][`${word}`] += 1
+                        }else{
+                            library[`${version}`][`${search}`][`${word}`] = 1
+                        }
+                    }else{
+                        library[`${version}`][`${search}`] = { [`${word}`] : 1 }
+                    }
+                }else{
+                    library[`${version}`] = { [`${search}`] : { [`${word}`] : 1 }}
                 }
-                products.push( msg.product );
-                chrome.storage.local.set({products: products});
-                port.postMessage({result:'received'});
-            });
-            
-        }else{
-            port.postMessage({result:'not received'});
+                break;
+            case 'click': 
+                console.log( version, search, word )
+                break;
+                
+
+
         }
-    })
+    } )
 });
+

@@ -1,6 +1,5 @@
 import { useEffect} from 'react'
 import { Route, Routes, useNavigate } from 'react-router-dom'
-import { Matches, Match } from './components';
 import { Popup, Configuration } from './routes'
 
 export default function App(){
@@ -25,11 +24,6 @@ export default function App(){
 
     return(
         <Routes>
-            <Route path='/' element={
-              <Matches>
-                <Match pattern='https://www.biblegateway.com/passage/*' />
-              </Matches>
-            }/>
             <Route path='/popup' element={<Popup />} />
             <Route path='/configuration' element={<Configuration />} />
         </Routes>
