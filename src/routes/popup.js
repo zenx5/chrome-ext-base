@@ -16,7 +16,7 @@ import { createPort, send } from "../utils/Message";
 import { get } from "../utils/Storage";
 
 export default function Popup(){
-    const [words, setWords] = useState({});
+    const [words, setWords] = useState(null);
     const [total, setTotal] = useState(0);
 
     const port = createPort('Popup', (a,b,c) => {
@@ -25,12 +25,21 @@ export default function Popup(){
 
 
     useEffect(() => {
-        (total===0 && getData())
+        (total===0 && (async ()=>{await getData()})())
     }, []);
 
     const getData = async () => {
-        const library = await get('library')
-        console.log(library)
+        const tabs = await chrome.tabs.query({active:true, status:"complete"})
+        console.log( 'tabs', tabs )
+        const currentTab = tabs.filter( tab => /https:\/\/www\.biblegateway\.com/.exec(tab.url)!==null)[0]
+        const search = currentTab.url.match(/search=[a-zA-Z0-9+]{1,}/)[0].split('=')[1].toLowerCase()
+        const version = currentTab.url.match(/version=[a-zA-Z0-9]{1,}/)[0].split('=')[1].toLowerCase()
+        console.log( search, version)
+        chrome.storage.local.get('library', ({library}) => {
+            console.log(library)
+            console.log( library[`${version}`][`${search}`] )
+            setWords(library[`${version}`][`${search}`])
+        })
     }
 
     
@@ -65,13 +74,20 @@ export default function Popup(){
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {words.map( item => (
-                                    <TableRow>
-                                        <TableCell align="left">{item.word}</TableCell>
-                                        <TableCell align="center">{ item.word===''? '-' : percent(item.quantity)}%</TableCell>
-                                        <TableCell align="right"><Button onClick={()=>send(port, {quantity:item.quantity})}>{item.quantity}</Button></TableCell>
-                                    </TableRow>
-                                ))}
+                                { 
+                                    words && Object.keys(words).map( word => (
+                                        // word.match(/[a-zA-Z0-9]{1,}/)!==null && 
+                                        <TableRow>
+                                            <TableCell align="left">{word}</TableCell>
+                                            <TableCell align="center"></TableCell>
+                                            {/* <TableCell align="center">{ word===''? '-' : percent(words[word])}%</TableCell> */}
+                                            <TableCell align="right"><Button >{words[word]}</Button></TableCell>
+                                        </TableRow>
+                                    ) )
+                                }
+                                {/* {words && words.map( item => (
+                                    
+                                ))} */}
                             </TableBody>
                         </Table>
                     </TableContainer>

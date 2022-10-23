@@ -3,7 +3,7 @@
     "name": "Base Extension",
     "description": "Description",
     "version": "1.0.0",
-    "permissions": ["storage"],
+    "permissions": ["storage", "tabs"],
     "background": {
         "service_worker": "Background.js"
     },

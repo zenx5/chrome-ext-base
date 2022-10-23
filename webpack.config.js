@@ -42,7 +42,6 @@ module.exports = (env, argv) => {
                 patterns:[
                     { from: path.resolve(__dirname, 'manifest.json'), to: path.resolve(__dirname, 'app/manifest.json')},
                     { from: path.resolve(__dirname, 'src/utils/Background.js'), to: path.resolve(__dirname, 'app/Background.js')}
-                    { from: path.resolve(__dirname, 'src/utils/Storage.js'), to: path.resolve(__dirname, 'app/Storage.js')}
                 ]                
             }),
             new HtmlWebpackPlugin({template:'src/index.html'})
